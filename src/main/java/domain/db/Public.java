@@ -5,11 +5,14 @@ package domain.db;
 
 
 import domain.db.tables.FlywaySchemaHistory;
+import domain.db.tables.Tasks;
+import domain.db.tables.TasksProperties;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.jooq.Catalog;
+import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
@@ -33,6 +36,16 @@ public class Public extends SchemaImpl {
     public final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
 
     /**
+     * The table <code>public.tasks</code>.
+     */
+    public final Tasks TASKS = Tasks.TASKS;
+
+    /**
+     * The table <code>public.tasks_properties</code>.
+     */
+    public final TasksProperties TASKS_PROPERTIES = TasksProperties.TASKS_PROPERTIES;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -46,8 +59,17 @@ public class Public extends SchemaImpl {
     }
 
     @Override
+    public final List<Sequence<?>> getSequences() {
+        return Arrays.<Sequence<?>>asList(
+            Sequences.TASKS_ID_SEQ,
+            Sequences.TASKS_PROPERTIES_ID_SEQ);
+    }
+
+    @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
-            FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY);
+            FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
+            Tasks.TASKS,
+            TasksProperties.TASKS_PROPERTIES);
     }
 }

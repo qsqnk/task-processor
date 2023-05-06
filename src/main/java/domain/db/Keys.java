@@ -5,8 +5,13 @@ package domain.db;
 
 
 import domain.db.tables.FlywaySchemaHistory;
+import domain.db.tables.Tasks;
+import domain.db.tables.TasksProperties;
 import domain.db.tables.records.FlywaySchemaHistoryRecord;
+import domain.db.tables.records.TasksPropertiesRecord;
+import domain.db.tables.records.TasksRecord;
 
+import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
@@ -25,4 +30,12 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
+    public static final UniqueKey<TasksRecord> TASKS_PKEY = Internal.createUniqueKey(Tasks.TASKS, DSL.name("tasks_pkey"), new TableField[] { Tasks.TASKS.ID }, true);
+    public static final UniqueKey<TasksPropertiesRecord> TASKS_PROPERTIES_PKEY = Internal.createUniqueKey(TasksProperties.TASKS_PROPERTIES, DSL.name("tasks_properties_pkey"), new TableField[] { TasksProperties.TASKS_PROPERTIES.ID }, true);
+
+    // -------------------------------------------------------------------------
+    // FOREIGN KEY definitions
+    // -------------------------------------------------------------------------
+
+    public static final ForeignKey<TasksPropertiesRecord, TasksRecord> TASKS_PROPERTIES__FK__TASKS_PROPERTIES__TASK_ID = Internal.createForeignKey(TasksProperties.TASKS_PROPERTIES, DSL.name("fk__tasks_properties__task_id"), new TableField[] { TasksProperties.TASKS_PROPERTIES.TASK_ID }, Keys.TASKS_PKEY, new TableField[] { Tasks.TASKS.ID }, true);
 }

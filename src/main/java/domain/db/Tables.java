@@ -5,6 +5,8 @@ package domain.db;
 
 
 import domain.db.tables.FlywaySchemaHistory;
+import domain.db.tables.Tasks;
+import domain.db.tables.TasksProperties;
 
 
 /**
@@ -17,4 +19,14 @@ public class Tables {
      * The table <code>public.flyway_schema_history</code>.
      */
     public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
+
+    /**
+     * The table <code>public.tasks</code>.
+     */
+    public static final Tasks TASKS = Tasks.TASKS;
+
+    /**
+     * The table <code>public.tasks_properties</code>.
+     */
+    public static final TasksProperties TASKS_PROPERTIES = TasksProperties.TASKS_PROPERTIES;
 }
