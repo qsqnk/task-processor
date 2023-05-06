@@ -7,7 +7,7 @@ package domain.db.tables;
 import domain.db.Indexes;
 import domain.db.Keys;
 import domain.db.Public;
-import domain.db.enums.Taskstatus;
+import domain.db.enums.Taskstatusenum;
 import domain.db.tables.records.TasksRecord;
 
 import java.time.LocalDateTime;
@@ -65,22 +65,22 @@ public class Tasks extends TableImpl<TasksRecord> {
     /**
      * The column <code>public.tasks.status</code>.
      */
-    public final TableField<TasksRecord, Taskstatus> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR.nullable(false).asEnumDataType(domain.db.enums.Taskstatus.class), this, "");
+    public final TableField<TasksRecord, Taskstatusenum> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR.nullable(false).asEnumDataType(domain.db.enums.Taskstatusenum.class), this, "");
 
     /**
      * The column <code>public.tasks.scheduled_ts</code>.
      */
-    public final TableField<TasksRecord, LocalDateTime> SCHEDULED_TS = createField(DSL.name("scheduled_ts"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
+    public final TableField<TasksRecord, LocalDateTime> SCHEDULED_TS = createField(DSL.name("scheduled_ts"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field("(now() AT TIME ZONE 'UTC'::text)", SQLDataType.LOCALDATETIME)), this, "");
 
     /**
      * The column <code>public.tasks.created_ts</code>.
      */
-    public final TableField<TasksRecord, LocalDateTime> CREATED_TS = createField(DSL.name("created_ts"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
+    public final TableField<TasksRecord, LocalDateTime> CREATED_TS = createField(DSL.name("created_ts"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field("(now() AT TIME ZONE 'UTC'::text)", SQLDataType.LOCALDATETIME)), this, "");
 
     /**
      * The column <code>public.tasks.updated_ts</code>.
      */
-    public final TableField<TasksRecord, LocalDateTime> UPDATED_TS = createField(DSL.name("updated_ts"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
+    public final TableField<TasksRecord, LocalDateTime> UPDATED_TS = createField(DSL.name("updated_ts"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field("(now() AT TIME ZONE 'UTC'::text)", SQLDataType.LOCALDATETIME)), this, "");
 
     private Tasks(Name alias, Table<TasksRecord> aliased) {
         this(alias, aliased, null);
@@ -171,7 +171,7 @@ public class Tasks extends TableImpl<TasksRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<Long, String, Taskstatus, LocalDateTime, LocalDateTime, LocalDateTime> fieldsRow() {
+    public Row6<Long, String, Taskstatusenum, LocalDateTime, LocalDateTime, LocalDateTime> fieldsRow() {
         return (Row6) super.fieldsRow();
     }
 }
