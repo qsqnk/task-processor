@@ -51,7 +51,7 @@ class TaskPoller @Autowired constructor(
     private fun doBeforePause() {
         var shouldContinue = true
         while (shouldContinue) {
-            shouldContinue = shouldContinue(doPoll())
+            shouldContinue = shouldContinue(doPollSafe())
         }
     }
 
@@ -60,6 +60,12 @@ class TaskPoller @Autowired constructor(
         is PollingResult.Error -> false
         is PollingResult.Success -> true
     }
+
+    private fun doPollSafe(): PollingResult =
+        runCatching(::doPoll).getOrElse { throwable ->
+            logger.error("An error occurred during polling iteration", throwable)
+            PollingResult.Error(throwable)
+        }
 
     private fun doPoll(): PollingResult {
         logger.info("Making polling iteration")
