@@ -1,7 +1,7 @@
 package application.processing
 
 import application.task.TaskContext
-import application.task.TaskRunner
+import application.task.runner.TaskRunner
 import application.utils.logger
 import domain.model.task.Task
 import domain.repository.TasksPropertiesRepository

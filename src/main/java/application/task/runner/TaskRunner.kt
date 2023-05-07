@@ -1,4 +1,6 @@
-package application.task
+package application.task.runner
+
+import application.task.TaskContext
 
 interface TaskRunner {
     val name: String
