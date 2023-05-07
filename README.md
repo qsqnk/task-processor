@@ -1,6 +1,64 @@
-# task-processor
+# Task processor
 
-Simple persistent task-processor based on PostgreSQL task queue and task polling technique
+This repository contains a simple persistent PostgreSQL-based task processor with RESTful API.
+
+## Table of Contents
+
+- [Endpoints](#endpoints)
+  - [Submit Task](#submit-task)
+  - [Get Task Info](#get-task-info)
+- [Usage](#usage)
+  - [Creating runner](#creating-runner)
+  - [Submitting task](#submitting-task)
+
+## Endpoints
+
+### Submit Task
+
+```
+POST /api/v1/task
+```
+**Request Body**
+
+```json
+{
+  "runnerName": "Abc",
+  "properties": {
+      "a": "aValue",
+      "b": 1
+  }
+}
+```
+
+**Response Body**
+
+```json
+{
+  "taskId": 1,
+}
+```
+
+### Get Task Info
+
+```
+GET /api/v1/task/{taskId}/info
+```
+
+**Path Parameters**
+
+- `taskId` - ID of the task to get information about
+
+**Response Body**
+
+```json
+{
+  "status": COMPLETED
+}
+```
+
+## Usage
+
+### Creating runner
 
 Create class that implements `TaskRunner` interface and annotate it with `@Component`
 ```
@@ -13,6 +71,8 @@ class AbcRunner : TaskRunner {
     }
 }
 ```
+
+### Submitting task
 
 Create task and submit it using `TaskService`
 ```
