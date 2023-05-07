@@ -20,10 +20,10 @@ class TxHelperImpl(
                 propagationBehavior = propagation.value()
                 isolationLevel = isolation.value()
                 isReadOnly = readOnly
-            }.execute {
+            }.execute<T> {
                 supplier()
-            }.let {
-                checkNotNull(it) { "Transaction returned null" }
-            }
+            } as T
     }
 }
+
+
