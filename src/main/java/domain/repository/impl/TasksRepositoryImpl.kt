@@ -20,6 +20,12 @@ import org.springframework.stereotype.Repository
 class TasksRepositoryImpl @Autowired constructor(
     private val dslContext: DSLContext,
 ) : TasksRepository {
+    override fun get(ids: Collection<TaskId>): List<Task> {
+        return dslContext.selectFrom(TASKS)
+            .where(TASKS.ID.`in`(ids.map(TaskId::value)))
+            .fetch(::toModel)
+    }
+
     override fun create(rqs: Collection<TaskCreateRq>): List<Task> {
         val (head, tail) = rqs
             .ifEmpty { return emptyList() }

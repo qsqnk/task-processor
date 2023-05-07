@@ -1,4 +1,4 @@
-package web.dto
+package web.dto.submit
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.JsonNode
