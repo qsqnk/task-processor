@@ -1,6 +1,6 @@
 # task-processor
 
-Simple task-processor based on task polling
+Simple persistent task-processor based on PostgreSQL task queue and task polling technique
 
 Create class that implements `TaskRunner` interface and annotate it with `@Component`
 ```
