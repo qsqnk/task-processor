@@ -1,5 +1,6 @@
 package application.task
 
+import application.utils.logger
 import domain.model.property.TaskPropertyCreateRq
 import domain.model.task.TaskCreateRq
 import domain.repository.TasksPropertiesRepository
@@ -16,6 +17,11 @@ class TaskService @Autowired constructor(
     private val tasksPropertiesRepository: TasksPropertiesRepository,
 ) {
     fun submit(task: Task, delay: Duration = Duration.ZERO) {
+        logger.info(
+            "Submitting task with runnerName={} with delay={}",
+            task.runnerName,
+            delay,
+        )
         txHelper.withTx {
             val createdTask = tasksRepository.create(
                 TaskCreateRq(task.runnerName, delay),
@@ -29,5 +35,9 @@ class TaskService @Autowired constructor(
             }
             tasksPropertiesRepository.create(taskPropertyCreateRqs)
         }
+    }
+
+    companion object {
+        private val logger = logger()
     }
 }

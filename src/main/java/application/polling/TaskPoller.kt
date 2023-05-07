@@ -2,6 +2,7 @@ package application.polling
 
 import application.processing.ProcessingResult
 import application.processing.TaskProcessor
+import application.utils.logger
 import domain.model.task.TaskStatus
 import domain.repository.TasksRepository
 import domain.tx.TxHelper
@@ -23,13 +24,14 @@ class TaskPoller @Autowired constructor(
 
     @Value("\${task.poller.thread.count:1}")
     private val threadCount: Int,
-    @Value("\${task.poller.iteration.delay.millis:500}")
+    @Value("\${task.poller.iteration.delay.millis:2000}")
     private val iterationDelayMillis: Long,
 ) {
     private val scheduledService = Executors.newScheduledThreadPool(threadCount)
 
     @EventListener(ContextStartedEvent::class)
     fun startPolling() {
+        logger.info("Submitting polling tasks")
         repeat(threadCount) {
             scheduledService.scheduleWithFixedDelay(
                 ::doBeforePause,
@@ -42,6 +44,7 @@ class TaskPoller @Autowired constructor(
 
     @EventListener(ContextStoppedEvent::class)
     fun endPolling() {
+        logger.info("Ending polling on context stopped event")
         scheduledService.shutdownNow()
     }
 
@@ -59,11 +62,16 @@ class TaskPoller @Autowired constructor(
     }
 
     private fun doPoll(): PollingResult {
+        logger.info("Making polling iteration")
         return txHelper.withTx {
-            val task = tasksRepository.getScheduled(limit = 1)
-                .firstOrNull() ?: return@withTx PollingResult.NoTasks
+            val task = tasksRepository.getScheduled(limit = 1).firstOrNull()
+                ?: run {
+                    logger.debug("No scheduled tasks found")
+                    return@withTx PollingResult.NoTasks
+                }
             when (val processingResult = taskProcessor.process(task)) {
                 is ProcessingResult.Error -> {
+                    logger.error("Polling iteration failed")
                     tasksRepository.update(
                         task.copy(status = TaskStatus.FAILED),
                     )
@@ -71,6 +79,7 @@ class TaskPoller @Autowired constructor(
                 }
 
                 is ProcessingResult.Success -> {
+                    logger.debug("Successful polling iteration")
                     tasksRepository.update(
                         task.copy(status = TaskStatus.COMPLETED),
                     )
@@ -78,5 +87,9 @@ class TaskPoller @Autowired constructor(
                 }
             }
         }
+    }
+
+    companion object {
+        private val logger = logger()
     }
 }
