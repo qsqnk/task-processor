@@ -13,7 +13,6 @@ import web.dto.submit.SubmitTaskRsDto
 @RequestMapping("/api/v1/task")
 interface TaskController {
     @PostMapping(
-        "/",
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE],
     )
