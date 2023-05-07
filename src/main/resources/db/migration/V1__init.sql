@@ -5,7 +5,7 @@ create type TaskStatusEnum as enum ('SCHEDULED', 'COMPLETED', 'FAILED');
 create table tasks
 (
     id           bigserial      not null primary key,
-    name         varchar(256)   not null,
+    runner_name  varchar(256)   not null,
     status       TaskStatusEnum not null,
     scheduled_ts timestamp      not null default (now() at time zone 'UTC'),
     created_ts   timestamp      not null default (now() at time zone 'UTC'),

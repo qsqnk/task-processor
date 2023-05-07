@@ -39,16 +39,16 @@ public class TasksRecord extends UpdatableRecordImpl<TasksRecord> implements Rec
     }
 
     /**
-     * Setter for <code>public.tasks.name</code>.
+     * Setter for <code>public.tasks.runner_name</code>.
      */
-    public void setName(String value) {
+    public void setRunnerName(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>public.tasks.name</code>.
+     * Getter for <code>public.tasks.runner_name</code>.
      */
-    public String getName() {
+    public String getRunnerName() {
         return (String) get(1);
     }
 
@@ -138,7 +138,7 @@ public class TasksRecord extends UpdatableRecordImpl<TasksRecord> implements Rec
 
     @Override
     public Field<String> field2() {
-        return Tasks.TASKS.NAME;
+        return Tasks.TASKS.RUNNER_NAME;
     }
 
     @Override
@@ -168,7 +168,7 @@ public class TasksRecord extends UpdatableRecordImpl<TasksRecord> implements Rec
 
     @Override
     public String component2() {
-        return getName();
+        return getRunnerName();
     }
 
     @Override
@@ -198,7 +198,7 @@ public class TasksRecord extends UpdatableRecordImpl<TasksRecord> implements Rec
 
     @Override
     public String value2() {
-        return getName();
+        return getRunnerName();
     }
 
     @Override
@@ -229,7 +229,7 @@ public class TasksRecord extends UpdatableRecordImpl<TasksRecord> implements Rec
 
     @Override
     public TasksRecord value2(String value) {
-        setName(value);
+        setRunnerName(value);
         return this;
     }
 
@@ -282,11 +282,11 @@ public class TasksRecord extends UpdatableRecordImpl<TasksRecord> implements Rec
     /**
      * Create a detached, initialised TasksRecord
      */
-    public TasksRecord(Long id, String name, Taskstatusenum status, LocalDateTime scheduledTs, LocalDateTime createdTs, LocalDateTime updatedTs) {
+    public TasksRecord(Long id, String runnerName, Taskstatusenum status, LocalDateTime scheduledTs, LocalDateTime createdTs, LocalDateTime updatedTs) {
         super(Tasks.TASKS);
 
         setId(id);
-        setName(name);
+        setRunnerName(runnerName);
         setStatus(status);
         setScheduledTs(scheduledTs);
         setCreatedTs(createdTs);

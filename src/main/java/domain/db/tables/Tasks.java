@@ -58,9 +58,9 @@ public class Tasks extends TableImpl<TasksRecord> {
     public final TableField<TasksRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>public.tasks.name</code>.
+     * The column <code>public.tasks.runner_name</code>.
      */
-    public final TableField<TasksRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(256).nullable(false), this, "");
+    public final TableField<TasksRecord, String> RUNNER_NAME = createField(DSL.name("runner_name"), SQLDataType.VARCHAR(256).nullable(false), this, "");
 
     /**
      * The column <code>public.tasks.status</code>.

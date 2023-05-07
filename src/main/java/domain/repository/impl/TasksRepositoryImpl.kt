@@ -9,6 +9,7 @@ import domain.model.task.TaskCreateRq
 import domain.model.task.TaskStatus
 import domain.repository.TasksRepository
 import domain.repository.utils.instantFrom
+import domain.repository.utils.intervalField
 import domain.repository.utils.localDateTimeFrom
 import domain.repository.utils.nowField
 import org.jooq.DSLContext
@@ -19,10 +20,22 @@ import org.springframework.stereotype.Repository
 class TasksRepositoryImpl @Autowired constructor(
     private val dslContext: DSLContext,
 ) : TasksRepository {
-    override fun create(rqs: Collection<TaskCreateRq>) {
-        rqs.map(::toRecord)
-            .let(dslContext::batchInsert)
-            .execute()
+    override fun create(rqs: Collection<TaskCreateRq>): List<Task> {
+        val (head, tail) = rqs
+            .ifEmpty { return emptyList() }
+            .run { first() to drop(1) }
+        return tail.fold(
+            initial = dslContext.insertInto(TASKS)
+                .set(toRecord(head))
+                .set(TASKS.SCHEDULED_TS, nowField().plus(intervalField(head.scheduleDelay)))
+        ) { query, item ->
+            query.newRecord()
+                .set(toRecord(item))
+                .set(TASKS.SCHEDULED_TS, nowField().plus(intervalField(item.scheduleDelay)))
+        }.returning()
+            .fetch()
+            .map(::toModel)
+
     }
 
     override fun update(tasks: Collection<Task>) {
@@ -45,7 +58,7 @@ class TasksRepositoryImpl @Autowired constructor(
         private fun toModel(record: TasksRecord): Task = with(record) {
             Task(
                 id = TaskId(id),
-                name = name,
+                runnerName = runnerName,
                 status = toModel(status),
                 scheduledTs = instantFrom(scheduledTs),
                 createdTs = instantFrom(createdTs),
@@ -62,14 +75,14 @@ class TasksRepositoryImpl @Autowired constructor(
         private fun toRecord(rq: TaskCreateRq): TasksRecord = with(rq) {
             TasksRecord(
                 null,
-                name,
+                runnerName,
                 Taskstatusenum.SCHEDULED,
-                scheduledTs?.let(::localDateTimeFrom),
+                null,
                 null,
                 null,
             ).apply {
                 reset(TASKS.ID)
-                scheduledTs ?: reset(TASKS.SCHEDULED_TS)
+                reset(TASKS.SCHEDULED_TS)
                 reset(TASKS.CREATED_TS)
                 reset(TASKS.UPDATED_TS)
             }
@@ -78,7 +91,7 @@ class TasksRepositoryImpl @Autowired constructor(
         private fun toRecord(model: Task): TasksRecord = with(model) {
             TasksRecord(
                 model.id.value,
-                name,
+                runnerName,
                 toRecord(status),
                 localDateTimeFrom(scheduledTs),
                 localDateTimeFrom(createdTs),

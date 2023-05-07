@@ -5,7 +5,7 @@ import java.time.Instant
 
 data class Task(
     val id: TaskId,
-    val name: String,
+    val runnerName: String,
     val status: TaskStatus,
     val scheduledTs: Instant,
     val createdTs: Instant,

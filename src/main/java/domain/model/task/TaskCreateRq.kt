@@ -1,8 +1,8 @@
 package domain.model.task
 
-import java.time.Instant
+import kotlin.time.Duration
 
 data class TaskCreateRq(
-    val name: String,
-    val scheduledTs: Instant?,
+    val runnerName: String,
+    val scheduleDelay: Duration,
 )
