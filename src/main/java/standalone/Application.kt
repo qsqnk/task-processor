@@ -12,6 +12,6 @@ import web.WebSpringConfiguration
 open class Application
 
 fun main(args: Array<String>) {
-    SpringApplication.run(Application::class.java)
+    SpringApplication.run(Application::class.java).start()
 }
 
